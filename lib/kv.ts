@@ -5,8 +5,14 @@ import type { RoundSummary } from "../src/engine/game";
 //
 // We use a simple Map for local development so no external Redis is needed.
 // In production on Vercel, swap to @vercel/kv or @upstash/redis.
+//
+// Use globalThis to survive Next.js dev hot-reloads.
 
-const store = new Map<string, string>();
+const globalStore = globalThis as unknown as { __mercatorKV?: Map<string, string> };
+if (!globalStore.__mercatorKV) {
+  globalStore.__mercatorKV = new Map<string, string>();
+}
+const store = globalStore.__mercatorKV;
 
 async function get<T>(key: string): Promise<T | null> {
   const val = store.get(key);
