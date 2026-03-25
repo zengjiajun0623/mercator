@@ -2,7 +2,7 @@
  * Room lifecycle management — create, join, start, resolve rounds.
  */
 import { customAlphabet } from "nanoid";
-import type { GameConfig } from "../src/engine/types.js";
+import type { Action, GameConfig } from "../src/engine/types.js";
 import { DEFAULT_CONFIG } from "../src/engine/types.js";
 import type { RoomState, GameState, PlayerSlot, AgentType } from "./game-state.js";
 import {
