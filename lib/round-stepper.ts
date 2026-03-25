@@ -28,8 +28,14 @@ import type { RoundSummary, GameResult } from "../src/engine/game.js";
 // ── Nation creation (mirrors game.ts createNation) ──────────────────────────
 
 const NATION_NAMES = [
-  "Aurelia", "Borealis", "Crescentia", "Delmara",
-  "Elythia", "Feronia", "Galdoria", "Hespera",
+  "Aurelia",
+  "Borealis",
+  "Crescentia",
+  "Delmara",
+  "Elythia",
+  "Feronia",
+  "Galdoria",
+  "Hespera",
 ];
 
 const STARTING_BUILDS: Building["type"][][] = [
@@ -84,11 +90,7 @@ function describeAction(action: Action): string {
   }
 }
 
-function applyActions(
-  nation: Nation,
-  actions: Action[],
-  marketOrders: MarketOrder[]
-): string[] {
+function applyActions(nation: Nation, actions: Action[], marketOrders: MarketOrder[]): string[] {
   const descriptions: string[] = [];
   for (const action of actions) {
     switch (action.type) {
@@ -143,12 +145,8 @@ function applyActions(
 // ── Enforce action limits (same as game.ts) ─────────────────────────────────
 
 export function enforceActionLimits(actions: Action[]): Action[] {
-  const policy = actions.filter(
-    (a) => a.type === "set_welfare" || a.type === "set_tariff"
-  );
-  const operational = actions.filter(
-    (a) => a.type !== "set_welfare" && a.type !== "set_tariff"
-  );
+  const policy = actions.filter((a) => a.type === "set_welfare" || a.type === "set_tariff");
+  const operational = actions.filter((a) => a.type !== "set_welfare" && a.type !== "set_tariff");
   return [...policy, ...operational.slice(0, 5)];
 }
 
@@ -159,7 +157,7 @@ export function buildObservation(
   nations: Nation[],
   round: number,
   totalRounds: number,
-  marketPrices: MarketPrices
+  marketPrices: MarketPrices,
 ) {
   return {
     round,
@@ -172,9 +170,7 @@ export function buildObservation(
         id: n.id,
         name: n.name,
         pops: n.pops.count,
-        buildingCount: n.buildings.filter(
-          (b) => b.constructionTurnsLeft === 0
-        ).length,
+        buildingCount: n.buildings.filter((b) => b.constructionTurnsLeft === 0).length,
       })),
   };
 }
@@ -203,7 +199,7 @@ export function stepRound(
   allActions: Record<string, Action[]>,
   round: number,
   totalRounds: number,
-  agentLabels: Record<string, string>
+  agentLabels: Record<string, string>,
 ): StepRoundResult {
   const nationsMap = new Map<string, Nation>();
   for (const n of nations) {
@@ -275,12 +271,9 @@ export function stepRound(
       treasury: Math.round(n.treasury * 100) / 100,
       pops: n.pops.count,
       satisfaction: Math.round(n.pops.satisfaction * 100) / 100,
-      buildingCount: n.buildings.filter((b) => b.constructionTurnsLeft === 0)
-        .length,
+      buildingCount: n.buildings.filter((b) => b.constructionTurnsLeft === 0).length,
       totalBuildings: n.buildings.length,
-      stockpile: Object.fromEntries(
-        GOODS.map((g) => [g, Math.round(n.stockpile[g] * 10) / 10])
-      ),
+      stockpile: Object.fromEntries(GOODS.map((g) => [g, Math.round(n.stockpile[g] * 10) / 10])),
     })),
     tradeCount: trades.length,
     event: event?.description,
@@ -294,7 +287,7 @@ export function stepRound(
 
 export function computeScores(
   nations: Nation[],
-  agentLabels: Record<string, string>
+  agentLabels: Record<string, string>,
 ): GameResult["scores"] {
   const scores = nations.map((n) => {
     const assetValue = buildingAssetValue(n);

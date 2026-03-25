@@ -5,12 +5,7 @@ import { customAlphabet } from "nanoid";
 import type { Action, GameConfig } from "../src/engine/types.js";
 import { DEFAULT_CONFIG } from "../src/engine/types.js";
 import type { RoomState, GameState, PlayerSlot, AgentType } from "./game-state.js";
-import {
-  createNation,
-  initialPrices,
-  buildObservation,
-  stepRound,
-} from "./round-stepper.js";
+import { createNation, initialPrices, buildObservation, stepRound } from "./round-stepper.js";
 import { getRoom, setRoom, getGameState, setGameState, appendHistory } from "./kv.js";
 import { getAIActions } from "./web-agents.js";
 
@@ -25,10 +20,7 @@ const DEFAULT_AI_TYPES: AgentType[] = [
 
 // ── Create room ─────────────────────────────────────────────────────────────
 
-export async function createRoom(
-  playerId: string,
-  playerName: string
-): Promise<RoomState> {
+export async function createRoom(playerId: string, playerName: string): Promise<RoomState> {
   const roomId = generateCode();
 
   const players: PlayerSlot[] = [
@@ -67,7 +59,7 @@ export async function createRoom(
 export async function joinRoom(
   roomId: string,
   playerId: string,
-  playerName: string
+  playerName: string,
 ): Promise<{ room: RoomState; playerIndex: number }> {
   const room = await getRoom(roomId);
   if (!room) throw new Error("Room not found");
@@ -102,7 +94,7 @@ export async function joinRoom(
 export async function startGame(
   roomId: string,
   playerId: string,
-  config?: Partial<GameConfig>
+  config?: Partial<GameConfig>,
 ): Promise<GameState> {
   const room = await getRoom(roomId);
   if (!room) throw new Error("Room not found");
@@ -117,15 +109,14 @@ export async function startGame(
 
   // Create nations
   const nations = Array.from({ length: room.config.nationCount }, (_, i) =>
-    createNation(i, room.config)
+    createNation(i, room.config),
   );
 
   // Build labels
   const agentLabels: Record<string, string> = {};
   for (const slot of room.players) {
     const nationId = `nation-${slot.nationIndex}`;
-    agentLabels[nationId] =
-      slot.type === "human" ? slot.playerName ?? "Human" : slot.type;
+    agentLabels[nationId] = slot.type === "human" ? (slot.playerName ?? "Human") : slot.type;
   }
 
   // Get human nation IDs
@@ -141,13 +132,7 @@ export async function startGame(
     if (slot.type === "human") continue;
     const nationId = `nation-${slot.nationIndex}`;
     const nation = nations[slot.nationIndex];
-    const obs = buildObservation(
-      nation,
-      nations,
-      1,
-      room.config.totalRounds,
-      marketPrices
-    );
+    const obs = buildObservation(nation, nations, 1, room.config.totalRounds, marketPrices);
     submittedActions[nationId] = await getAIActions(slot.type, nationId, obs);
   }
 
@@ -174,7 +159,7 @@ export async function startGame(
 export async function submitActions(
   roomId: string,
   playerId: string,
-  actions: Action[]
+  actions: Action[],
 ): Promise<{ resolved: boolean }> {
   const room = await getRoom(roomId);
   if (!room) throw new Error("Room not found");
@@ -209,11 +194,7 @@ export async function submitActions(
 
 // ── Resolve round ───────────────────────────────────────────────────────────
 
-async function resolveRound(
-  roomId: string,
-  room: RoomState,
-  game: GameState
-): Promise<void> {
+async function resolveRound(roomId: string, room: RoomState, game: GameState): Promise<void> {
   game.roundPhase = "resolving";
 
   // Step the round
@@ -223,7 +204,7 @@ async function resolveRound(
     game.submittedActions,
     game.currentRound,
     game.totalRounds,
-    game.agentLabels
+    game.agentLabels,
   );
 
   game.nations = result.nations;
@@ -261,13 +242,9 @@ async function resolveRound(
       game.nations,
       game.currentRound,
       game.totalRounds,
-      game.marketPrices
+      game.marketPrices,
     );
-    game.submittedActions[nationId] = await getAIActions(
-      slot.type,
-      nationId,
-      obs
-    );
+    game.submittedActions[nationId] = await getAIActions(slot.type, nationId, obs);
   }
 
   game.pendingPlayers = humanNationIds;
@@ -286,6 +263,6 @@ export function getPlayerObservation(game: GameState, nationIndex: number) {
     game.nations,
     game.currentRound,
     game.totalRounds,
-    game.marketPrices
+    game.marketPrices,
   );
 }

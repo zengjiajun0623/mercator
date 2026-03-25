@@ -19,7 +19,7 @@ import { enforceActionLimits } from "./round-stepper.js";
 export async function getAIActions(
   agentType: AgentType,
   nationId: string,
-  observation: Observation
+  observation: Observation,
 ): Promise<Action[]> {
   if (agentType === "human") {
     throw new Error("Cannot get AI actions for human player");

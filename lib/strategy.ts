@@ -4,11 +4,7 @@
  * Extracted from src/agent/web-agent.ts for browser-side reuse.
  * No Node.js dependencies — safe to import in React components.
  */
-import type {
-  Action,
-  BuildingType,
-  Observation,
-} from "../src/engine/types.js";
+import type { Action, BuildingType, Observation } from "../src/engine/types.js";
 import { GOODS, RECIPES } from "../src/engine/types.js";
 
 export type Focus = "food" | "industry" | "trade" | "people";
@@ -21,9 +17,19 @@ export const FOCUS_OPTIONS: Array<{
   desc: string;
 }> = [
   { value: "food", icon: "🌾", label: "Grow Food Supply", desc: "Farms, stockpile, feed people" },
-  { value: "industry", icon: "🏗️", label: "Build Industry", desc: "Factories, workshops, supply chains" },
+  {
+    value: "industry",
+    icon: "🏗️",
+    label: "Build Industry",
+    desc: "Factories, workshops, supply chains",
+  },
   { value: "trade", icon: "📈", label: "Export & Trade", desc: "Sell surplus, maximize revenue" },
-  { value: "people", icon: "👥", label: "Invest in People", desc: "Boost welfare, grow population" },
+  {
+    value: "people",
+    icon: "👥",
+    label: "Invest in People",
+    desc: "Boost welfare, grow population",
+  },
 ];
 
 export const POSTURE_OPTIONS: Array<{
@@ -33,15 +39,16 @@ export const POSTURE_OPTIONS: Array<{
   desc: string;
 }> = [
   { value: "free", icon: "🤝", label: "Free Trade", desc: "Low tariffs, competitive pricing" },
-  { value: "protectionist", icon: "🛡️", label: "Protectionist", desc: "High tariffs, keep reserves" },
+  {
+    value: "protectionist",
+    icon: "🛡️",
+    label: "Protectionist",
+    desc: "High tariffs, keep reserves",
+  },
   { value: "aggressive", icon: "⚔️", label: "Aggressive", desc: "Undercut rivals, dump goods" },
 ];
 
-export function translateStrategy(
-  focus: Focus,
-  posture: Posture,
-  obs: Observation
-): Action[] {
+export function translateStrategy(focus: Focus, posture: Posture, obs: Observation): Action[] {
   const policyActions: Action[] = [];
   const actions: Action[] = [];
   const n = obs.nation;
@@ -60,8 +67,7 @@ export function translateStrategy(
   const foodNeeded = n.pops.count * 0.8;
   const textilesNeeded = n.pops.count * 0.3;
   const textileProduction = millCount * 12;
-  const textileShort =
-    n.stockpile.textiles < textilesNeeded && textileProduction < textilesNeeded;
+  const textileShort = n.stockpile.textiles < textilesNeeded && textileProduction < textilesNeeded;
   const foodShort = n.stockpile.food < foodNeeded;
 
   // Policy: welfare
@@ -91,8 +97,7 @@ export function translateStrategy(
   }
 
   // Build
-  const canAfford = (type: BuildingType) =>
-    n.treasury > RECIPES[type].buildCost;
+  const canAfford = (type: BuildingType) => n.treasury > RECIPES[type].buildCost;
 
   if (emptySlots.length > 0) {
     let buildType: BuildingType | null = null;
@@ -105,19 +110,11 @@ export function translateStrategy(
           break;
         case "industry":
           if (!types.has("mine") && canAfford("mine")) buildType = "mine";
-          else if (
-            !types.has("factory") &&
-            types.has("mine") &&
-            canAfford("factory")
-          )
+          else if (!types.has("factory") && types.has("mine") && canAfford("factory")) {
             buildType = "factory";
-          else if (
-            !types.has("workshop") &&
-            types.has("mill") &&
-            canAfford("workshop")
-          )
+          } else if (!types.has("workshop") && types.has("mill") && canAfford("workshop")) {
             buildType = "workshop";
-          else if (canAfford("mill")) buildType = "mill";
+          } else if (canAfford("mill")) buildType = "mill";
           break;
         case "trade":
           if (
@@ -125,15 +122,11 @@ export function translateStrategy(
             types.has("mill") &&
             types.has("factory") &&
             canAfford("workshop")
-          )
+          ) {
             buildType = "workshop";
-          else if (
-            !types.has("factory") &&
-            types.has("mine") &&
-            canAfford("factory")
-          )
+          } else if (!types.has("factory") && types.has("mine") && canAfford("factory")) {
             buildType = "factory";
-          else if (canAfford("mill")) buildType = "mill";
+          } else if (canAfford("mill")) buildType = "mill";
           else if (!types.has("mine") && canAfford("mine")) buildType = "mine";
           break;
         case "people":
@@ -159,8 +152,9 @@ export function translateStrategy(
     const needed = wantTypes[focus].find((t) => !types.has(t));
     if (needed) {
       const typeCounts = new Map<BuildingType, number>();
-      for (const b of opBuildings)
+      for (const b of opBuildings) {
         typeCounts.set(b.type, (typeCounts.get(b.type) || 0) + 1);
+      }
       let maxCount = 0;
       let demolishType: BuildingType | null = null;
       for (const [t, count] of typeCounts) {
@@ -210,11 +204,7 @@ export function translateStrategy(
   for (const good of GOODS) {
     const stock = n.stockpile[good];
     let reserve =
-      good === "food"
-        ? foodNeeded * resMult
-        : good === "textiles"
-          ? textilesNeeded * resMult
-          : 0;
+      good === "food" ? foodNeeded * resMult : good === "textiles" ? textilesNeeded * resMult : 0;
     if (good === "food" && types.has("mill")) {
       reserve += 8;
     }
@@ -243,7 +233,7 @@ export function translateStrategy(
     if (n.stockpile.food < foodNeeded) {
       const qty = Math.min(
         foodNeeded - n.stockpile.food,
-        (n.treasury * 0.2) / (prices.food * mult.buy)
+        (n.treasury * 0.2) / (prices.food * mult.buy),
       );
       if (qty > 1) {
         actions.push({
@@ -258,7 +248,7 @@ export function translateStrategy(
     if (n.stockpile.textiles < textilesNeeded && actions.length < 5) {
       const qty = Math.min(
         textilesNeeded - n.stockpile.textiles,
-        (n.treasury * 0.15) / (prices.textiles * mult.buy)
+        (n.treasury * 0.15) / (prices.textiles * mult.buy),
       );
       if (qty > 1) {
         actions.push({

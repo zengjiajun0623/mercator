@@ -7,11 +7,7 @@ export const metadata: Metadata = {
     "Compete as rival nations in a turn-based economic strategy game. Build, trade, and grow your empire.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className="min-h-screen bg-[#0a0e17] text-gray-200 font-sans antialiased">

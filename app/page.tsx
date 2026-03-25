@@ -79,9 +79,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-screen px-4">
       <div className="text-6xl mb-4">🌍</div>
       <h1 className="text-4xl font-bold mb-2">Mercator</h1>
-      <p className="text-gray-500 text-lg mb-10">
-        Economic Strategy Arena — up to 4 players
-      </p>
+      <p className="text-gray-500 text-lg mb-10">Economic Strategy Arena — up to 4 players</p>
 
       {/* Player name */}
       <input
@@ -128,9 +126,7 @@ export default function Home() {
         </button>
       </div>
 
-      {error && (
-        <p className="mt-4 text-red-400 text-sm">{error}</p>
-      )}
+      {error && <p className="mt-4 text-red-400 text-sm">{error}</p>}
     </div>
   );
 }

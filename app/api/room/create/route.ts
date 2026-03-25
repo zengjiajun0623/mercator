@@ -6,10 +6,7 @@ export async function POST(request: Request) {
     const { playerId, playerName } = await request.json();
 
     if (!playerId || !playerName) {
-      return NextResponse.json(
-        { error: "playerId and playerName required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "playerId and playerName required" }, { status: 400 });
     }
 
     const room = await createRoom(playerId, playerName);

@@ -1,26 +1,17 @@
 import { NextResponse } from "next/server";
 import { submitActions } from "../../../../../lib/room-manager.js";
 
-export async function POST(
-  request: Request,
-  { params }: { params: Promise<{ roomId: string }> }
-) {
+export async function POST(request: Request, { params }: { params: Promise<{ roomId: string }> }) {
   try {
     const { roomId } = await params;
     const { playerId, actions } = await request.json();
 
     if (!playerId) {
-      return NextResponse.json(
-        { error: "playerId required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "playerId required" }, { status: 400 });
     }
 
     if (!Array.isArray(actions)) {
-      return NextResponse.json(
-        { error: "actions must be an array" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "actions must be an array" }, { status: 400 });
     }
 
     const { resolved } = await submitActions(roomId, playerId, actions);

@@ -5,10 +5,7 @@ import { getHistory } from "../../../../../lib/kv.js";
 import { getPlayerObservation } from "../../../../../lib/room-manager.js";
 import { computeScores } from "../../../../../lib/round-stepper.js";
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ roomId: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ roomId: string }> }) {
   try {
     const { roomId } = await params;
     const url = new URL(request.url);
