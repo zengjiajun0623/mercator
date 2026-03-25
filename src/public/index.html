@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mercator</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #0a0e17; color: #e0e0e0; min-height: 100vh; }
+
+  .container { max-width: 800px; margin: 0 auto; padding: 16px; }
+
+  /* Lobby */
+  #lobby { text-align: center; padding-top: 15vh; }
+  #lobby h1 { font-size: 2.5rem; margin-bottom: 8px; }
+  #lobby .globe { font-size: 4rem; margin-bottom: 16px; }
+  #lobby .subtitle { color: #888; font-size: 1.1rem; margin-bottom: 32px; }
+  #lobby .status { font-size: 1.3rem; color: #4fc3f7; }
+  .dots::after { content: ''; animation: dots 1.5s steps(4,end) infinite; }
+  @keyframes dots { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } }
+  #nation-badge { margin-top: 24px; padding: 16px 32px; background: #1a2233; border-radius: 12px; display: inline-block; }
+  #nation-badge .label { color: #888; font-size: 0.85rem; }
+  #nation-badge .name { font-size: 1.5rem; font-weight: bold; color: #4fc3f7; }
+
+  /* Game */
+  #game { display: none; }
+  .round-header { text-align: center; padding: 12px; background: #1a2233; border-radius: 12px; margin-bottom: 16px; }
+  .round-header h2 { font-size: 1.3rem; }
+  .round-header .event { color: #ffb74d; margin-top: 4px; font-weight: 600; }
+
+  /* Stats */
+  .stats { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .stat { flex: 1; min-width: 80px; background: #1a2233; border-radius: 10px; padding: 12px; text-align: center; }
+  .stat .value { font-size: 1.4rem; font-weight: bold; }
+  .stat .label { font-size: 0.75rem; color: #888; margin-top: 2px; }
+  .stat.treasury .value { color: #ffd54f; }
+  .stat.pops .value { color: #4fc3f7; }
+  .stat.satisfaction .value { color: #81c784; }
+
+  /* Stockpile */
+  .stockpile { background: #1a2233; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+  .stockpile h3 { font-size: 0.85rem; color: #888; margin-bottom: 8px; }
+  .stock-row { display: flex; align-items: center; margin-bottom: 6px; }
+  .stock-name { width: 80px; font-size: 0.85rem; }
+  .stock-bar-bg { flex: 1; height: 18px; background: #0a0e17; border-radius: 4px; overflow: hidden; position: relative; }
+  .stock-bar { height: 100%; border-radius: 4px; transition: width 0.5s; }
+  .stock-bar.food { background: #66bb6a; }
+  .stock-bar.textiles { background: #42a5f5; }
+  .stock-bar.iron { background: #bdbdbd; }
+  .stock-bar.machinery { background: #ff7043; }
+  .stock-bar.luxuries { background: #ab47bc; }
+  .stock-qty { width: 50px; text-align: right; font-size: 0.85rem; margin-left: 8px; }
+
+  /* Buildings */
+  .buildings { background: #1a2233; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+  .buildings h3 { font-size: 0.85rem; color: #888; margin-bottom: 8px; }
+  .building-icons { font-size: 1.5rem; letter-spacing: 4px; }
+
+  /* Rivals */
+  .rivals { background: #1a2233; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+  .rivals h3 { font-size: 0.85rem; color: #888; margin-bottom: 8px; }
+  .rival-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.9rem; }
+  .rival-name { font-weight: 600; }
+  .rival-stats { color: #888; }
+
+  /* Choices */
+  .choices { margin-bottom: 16px; }
+  .choices h3 { font-size: 0.95rem; margin-bottom: 10px; color: #4fc3f7; }
+  .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .choice-btn { padding: 16px 12px; border: 2px solid #2a3444; border-radius: 12px; background: #1a2233; color: #e0e0e0; cursor: pointer; text-align: left; transition: all 0.2s; font-size: 0.95rem; }
+  .choice-btn:hover { border-color: #4fc3f7; background: #1e2b3d; }
+  .choice-btn.selected { border-color: #4fc3f7; background: #1a3050; }
+  .choice-btn .icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+  .choice-btn .desc { font-size: 0.75rem; color: #888; margin-top: 4px; }
+
+  .posture-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+  /* Actions + Waiting */
+  #waiting { display: none; text-align: center; padding: 24px; color: #4fc3f7; font-size: 1.1rem; }
+  #action-log { background: #1a2233; border-radius: 10px; padding: 14px; margin-bottom: 16px; display: none; }
+  #action-log h3 { font-size: 0.85rem; color: #888; margin-bottom: 6px; }
+  #action-log .action { font-size: 0.9rem; padding: 2px 0; }
+
+  /* Scoreboard */
+  #scoreboard { display: none; text-align: center; }
+  #scoreboard h2 { font-size: 1.8rem; margin-bottom: 16px; }
+  .score-table { width: 100%; border-collapse: collapse; }
+  .score-table th { color: #888; font-size: 0.8rem; padding: 8px; text-align: left; }
+  .score-table td { padding: 10px 8px; border-top: 1px solid #2a3444; font-size: 1rem; }
+  .score-table .rank { font-size: 1.2rem; }
+  .score-table .total { font-weight: bold; color: #ffd54f; font-size: 1.1rem; }
+  .score-table tr:first-child td { border-top: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Lobby -->
+  <div id="lobby">
+    <div class="globe">🌍</div>
+    <h1>Mercator</h1>
+    <div class="subtitle">Agent Economic Arena</div>
+    <div id="nation-badge" style="display:none">
+      <div class="label">You are</div>
+      <div class="name" id="nation-name"></div>
+    </div>
+    <div class="status" id="lobby-status">Connecting<span class="dots"></span></div>
+  </div>
+
+  <!-- Game -->
+  <div id="game">
+    <div class="round-header">
+      <h2 id="round-title">Round 1</h2>
+      <div class="event" id="round-event"></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat treasury"><div class="value" id="s-treasury">$0</div><div class="label">Treasury</div></div>
+      <div class="stat pops"><div class="value" id="s-pops">0</div><div class="label">Population</div></div>
+      <div class="stat satisfaction"><div class="value" id="s-sat">0%</div><div class="label">Satisfaction</div></div>
+    </div>
+
+    <div class="stockpile">
+      <h3>STOCKPILE</h3>
+      <div id="stockpile-rows"></div>
+    </div>
+
+    <div class="buildings">
+      <h3>BUILDINGS</h3>
+      <div class="building-icons" id="building-icons"></div>
+    </div>
+
+    <div class="rivals">
+      <h3>RIVALS</h3>
+      <div id="rival-rows"></div>
+    </div>
+
+    <!-- Focus choice -->
+    <div class="choices" id="focus-choices">
+      <h3>What should your nation focus on?</h3>
+      <div class="choice-grid">
+        <div class="choice-btn" data-focus="food" onclick="pickFocus('food')">
+          <span class="icon">🌾</span>Grow Food<span class="desc">Farms, stockpile, feed people</span>
+        </div>
+        <div class="choice-btn" data-focus="industry" onclick="pickFocus('industry')">
+          <span class="icon">🏗️</span>Build Industry<span class="desc">Factories, workshops, supply chains</span>
+        </div>
+        <div class="choice-btn" data-focus="trade" onclick="pickFocus('trade')">
+          <span class="icon">📈</span>Export & Trade<span class="desc">Sell surplus, maximize revenue</span>
+        </div>
+        <div class="choice-btn" data-focus="people" onclick="pickFocus('people')">
+          <span class="icon">👥</span>Invest in People<span class="desc">Boost welfare, grow population</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Posture choice -->
+    <div class="choices" id="posture-choices" style="display:none">
+      <h3>Trade posture?</h3>
+      <div class="posture-grid">
+        <div class="choice-btn" data-posture="free" onclick="pickPosture('free')">
+          <span class="icon">🤝</span>Free Trade<span class="desc">Low tariffs, competitive</span>
+        </div>
+        <div class="choice-btn" data-posture="protectionist" onclick="pickPosture('protectionist')">
+          <span class="icon">🛡️</span>Protectionist<span class="desc">High tariffs, self-sufficient</span>
+        </div>
+        <div class="choice-btn" data-posture="aggressive" onclick="pickPosture('aggressive')">
+          <span class="icon">⚔️</span>Aggressive<span class="desc">Undercut rivals, crash prices</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="waiting">Waiting for other players<span class="dots"></span></div>
+
+    <div id="action-log">
+      <h3>YOUR ACTIONS THIS ROUND</h3>
+      <div id="action-list"></div>
+    </div>
+  </div>
+
+  <!-- Scoreboard -->
+  <div id="scoreboard">
+    <h2>🏆 Game Over</h2>
+    <table class="score-table" id="score-table"></table>
+  </div>
+
+</div>
+
+<script>
+const ICONS = { farm: '🌾', mill: '🧵', mine: '⛏️', factory: '🏭', workshop: '💎' };
+const GOODS = ['food', 'textiles', 'iron', 'machinery', 'luxuries'];
+
+let ws;
+let myNation = '';
+let selectedFocus = null;
+
+function connect() {
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(`${proto}//${location.host}`);
+
+  ws.onopen = () => {
+    document.getElementById('lobby-status').innerHTML = 'Connected, waiting for players<span class="dots"></span>';
+  };
+
+  ws.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    switch (msg.type) {
+      case 'joined':
+        myNation = msg.nationName;
+        document.getElementById('nation-badge').style.display = 'inline-block';
+        document.getElementById('nation-name').textContent = msg.nationName;
+        break;
+
+      case 'lobby':
+        document.getElementById('lobby-status').innerHTML =
+          `${msg.playersJoined}/${msg.playersNeeded} players joined<span class="dots"></span>`;
+        break;
+
+      case 'starting':
+        document.getElementById('lobby').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        break;
+
+      case 'round':
+        showRound(msg.observation);
+        break;
+
+      case 'actions':
+        showActions(msg.actions);
+        break;
+
+      case 'results':
+        showResults(msg.summary);
+        break;
+
+      case 'gameover':
+        showScoreboard(msg.scores);
+        break;
+    }
+  };
+
+  ws.onclose = () => {
+    document.getElementById('lobby-status').innerHTML = 'Disconnected. Refresh to reconnect.';
+  };
+}
+
+function showRound(obs) {
+  const n = obs.nation;
+  document.getElementById('round-title').textContent = `Round ${obs.round}/${obs.totalRounds} — ${n.name}`;
+  document.getElementById('round-event').textContent = '';
+  document.getElementById('s-treasury').textContent = `$${Math.round(n.treasury)}`;
+  document.getElementById('s-pops').textContent = n.pops.count;
+  const satPct = Math.round(n.pops.satisfaction * 100);
+  const satEl = document.getElementById('s-sat');
+  satEl.textContent = `${satPct}%`;
+  satEl.style.color = satPct > 70 ? '#81c784' : satPct < 30 ? '#e57373' : '#ffb74d';
+
+  // Stockpile
+  const maxStock = Math.max(1, ...GOODS.map(g => n.stockpile[g]));
+  let stockHTML = '';
+  for (const g of GOODS) {
+    const qty = n.stockpile[g];
+    const pct = (qty / Math.max(maxStock, 50)) * 100;
+    stockHTML += `<div class="stock-row">
+      <span class="stock-name">${g}</span>
+      <div class="stock-bar-bg"><div class="stock-bar ${g}" style="width:${Math.min(100,pct)}%"></div></div>
+      <span class="stock-qty">${Math.round(qty)}</span>
+    </div>`;
+  }
+  document.getElementById('stockpile-rows').innerHTML = stockHTML;
+
+  // Buildings
+  let icons = '';
+  for (const b of n.buildings) {
+    const icon = ICONS[b.type] || '?';
+    if (b.constructionTurnsLeft > 0) icons += `<span style="opacity:0.4">${icon}</span>`;
+    else icons += b.level > 1 ? `${icon}★` : icon;
+    icons += ' ';
+  }
+  const emptyCount = n.totalSlots - n.buildings.length;
+  for (let i = 0; i < emptyCount; i++) icons += '⬜ ';
+  document.getElementById('building-icons').innerHTML = icons;
+
+  // Rivals
+  let rivalsHTML = '';
+  for (const o of obs.otherNations) {
+    rivalsHTML += `<div class="rival-row"><span class="rival-name">${o.name}</span><span class="rival-stats">👥 ${o.pops}  🏭 ${o.buildingCount}</span></div>`;
+  }
+  document.getElementById('rival-rows').innerHTML = rivalsHTML;
+
+  // Show choices, hide waiting
+  selectedFocus = null;
+  document.getElementById('focus-choices').style.display = 'block';
+  document.getElementById('posture-choices').style.display = 'none';
+  document.getElementById('waiting').style.display = 'none';
+  document.getElementById('action-log').style.display = 'none';
+  document.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('selected'));
+}
+
+function pickFocus(focus) {
+  selectedFocus = focus;
+  document.querySelectorAll('[data-focus]').forEach(b => b.classList.remove('selected'));
+  document.querySelector(`[data-focus="${focus}"]`).classList.add('selected');
+  document.getElementById('focus-choices').style.display = 'none';
+  document.getElementById('posture-choices').style.display = 'block';
+}
+
+function pickPosture(posture) {
+  document.querySelectorAll('[data-posture]').forEach(b => b.classList.remove('selected'));
+  document.querySelector(`[data-posture="${posture}"]`).classList.add('selected');
+  document.getElementById('posture-choices').style.display = 'none';
+  document.getElementById('waiting').style.display = 'block';
+
+  ws.send(JSON.stringify({ type: 'choice', focus: selectedFocus, posture }));
+}
+
+function showActions(actions) {
+  document.getElementById('waiting').style.display = 'none';
+  const log = document.getElementById('action-log');
+  log.style.display = 'block';
+  document.getElementById('action-list').innerHTML = actions.map(a => `<div class="action">${a}</div>`).join('');
+}
+
+function showResults(summary) {
+  if (summary.event) {
+    document.getElementById('round-event').textContent = summary.event;
+  }
+}
+
+function showScoreboard(scores) {
+  document.getElementById('game').style.display = 'none';
+  const sb = document.getElementById('scoreboard');
+  sb.style.display = 'block';
+  const medals = ['🥇', '🥈', '🥉', ''];
+  let html = '<tr><th></th><th>Nation</th><th>Type</th><th>Treasury</th><th>Assets</th><th>Pop</th><th>Total</th></tr>';
+  scores.forEach((s, i) => {
+    const isMe = s.name === myNation;
+    const style = isMe ? 'background:#1a3050;' : '';
+    html += `<tr style="${style}">
+      <td class="rank">${medals[i] || i+1}</td>
+      <td>${s.name}${isMe ? ' (you)' : ''}</td>
+      <td style="color:#888">${s.label}</td>
+      <td>$${Math.round(s.treasury)}</td>
+      <td>$${s.assetValue}</td>
+      <td>$${s.popScore}</td>
+      <td class="total">$${Math.round(s.totalScore)}</td>
+    </tr>`;
+  });
+  document.getElementById('score-table').innerHTML = html;
+}
+
+connect();
+</script>
+</body>
+</html>
