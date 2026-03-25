@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import type { RoomState, GameState } from "../game-state";
+import type { RoomState } from "../game-state";
 import type { Observation } from "../../src/engine/types";
 import type { RoundSummary, GameResult } from "../../src/engine/game";
 
