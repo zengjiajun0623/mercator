@@ -36,8 +36,7 @@ export default function StockpileBar({ stockpile, pops }: Props) {
         {GOODS.map((good) => {
           const qty = Math.round(stockpile[good] * 10) / 10;
           const pct = (qty / maxQty) * 100;
-          const needed =
-            good === "food" ? foodNeeded : good === "textiles" ? textilesNeeded : 0;
+          const needed = good === "food" ? foodNeeded : good === "textiles" ? textilesNeeded : 0;
           const isShort = needed > 0 && qty < needed;
 
           return (

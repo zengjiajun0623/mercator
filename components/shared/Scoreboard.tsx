@@ -43,9 +43,7 @@ export default function Scoreboard({ result }: Props) {
           {result.scores.map((s, i) => (
             <div
               key={s.nationId}
-              className={`flex items-center gap-2 px-2 py-2 ${
-                i === 0 ? "bg-[#1a1800]" : ""
-              }`}
+              className={`flex items-center gap-2 px-2 py-2 ${i === 0 ? "bg-[#1a1800]" : ""}`}
             >
               <span className="w-6 text-sm">{MEDALS[i] || `${i + 1}`}</span>
               <span

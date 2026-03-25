@@ -8,17 +8,16 @@ interface Props {
 
 export default function NationDashboard({ nation }: Props) {
   const satPct = Math.round(nation.pops.satisfaction * 100);
-  const satColor =
-    satPct >= 70 ? "#66bb6a" : satPct >= 40 ? "#ffd54f" : "#ef5350";
+  const satColor = satPct >= 70 ? "#66bb6a" : satPct >= 40 ? "#ffd54f" : "#ef5350";
 
   return (
     <div className="panel">
-      <div className="panel-header">{">"} {nation.name.toUpperCase()}</div>
+      <div className="panel-header">
+        {">"} {nation.name.toUpperCase()}
+      </div>
       <div className="grid grid-cols-3 gap-3 text-center">
         <div>
-          <div className="text-[#ffd54f] text-lg font-bold">
-            ${Math.round(nation.treasury)}
-          </div>
+          <div className="text-[#ffd54f] text-lg font-bold">${Math.round(nation.treasury)}</div>
           <div className="font-pixel text-[6px] text-[#6b7280]">TREASURY</div>
         </div>
         <div>

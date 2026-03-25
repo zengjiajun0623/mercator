@@ -19,7 +19,8 @@ export default function RoomPage({ params }: Props) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="font-pixel text-[10px] text-[#4fc3f7]">
-          CONNECTING<span className="dots" />
+          CONNECTING
+          <span className="dots" />
         </div>
       </div>
     );
@@ -69,7 +70,8 @@ export default function RoomPage({ params }: Props) {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="font-pixel text-[10px] text-[#6b7280]">
-        LOADING GAME STATE<span className="dots" />
+        LOADING GAME STATE
+        <span className="dots" />
       </div>
     </div>
   );

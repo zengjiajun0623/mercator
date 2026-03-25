@@ -69,14 +69,18 @@ export default function RoomLobby({ room, roomId }: Props) {
 
         {/* Player slots */}
         <div className="panel mb-6">
-          <div className="panel-header">{">"} NATIONS ({humanCount}/4 players)</div>
+          <div className="panel-header">
+            {">"} NATIONS ({humanCount}/4 players)
+          </div>
           <div className="space-y-2">
             {room.players.map((slot, i) => (
               <div
                 key={i}
                 className="flex items-center gap-3 px-3 py-2 border border-[#2a3444] bg-[#0a0e17]"
               >
-                <span className="text-lg">{slot.type === "human" ? "👤" : AI_ICONS[slot.type] || "🤖"}</span>
+                <span className="text-lg">
+                  {slot.type === "human" ? "👤" : AI_ICONS[slot.type] || "🤖"}
+                </span>
                 <span style={{ color: NATION_COLORS[i] }} className="font-pixel text-[9px] w-24">
                   {NATION_NAMES[i]}
                 </span>
@@ -137,7 +141,8 @@ export default function RoomLobby({ room, roomId }: Props) {
         ) : (
           <div className="text-center py-3">
             <span className="text-[#6b7280] font-pixel text-[9px]">
-              WAITING FOR HOST TO START<span className="dots" />
+              WAITING FOR HOST TO START
+              <span className="dots" />
             </span>
           </div>
         )}

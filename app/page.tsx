@@ -139,9 +139,7 @@ export default function Home() {
         </button>
       </div>
 
-      {error && (
-        <p className="mt-4 text-[#ef5350] font-pixel text-[8px]">! {error}</p>
-      )}
+      {error && <p className="mt-4 text-[#ef5350] font-pixel text-[8px]">! {error}</p>}
 
       {/* Footer */}
       <p className="mt-16 text-[#2a3444] font-pixel text-[6px]">UP TO 4 PLAYERS // PVP + PVE</p>

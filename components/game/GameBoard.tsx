@@ -4,7 +4,12 @@ import { useState } from "react";
 import type { Observation } from "../../src/engine/types";
 import type { RoundSummary } from "../../src/engine/game";
 import type { Focus, Posture } from "../../lib/strategy";
-import { translateStrategy, FOCUS_OPTIONS, POSTURE_OPTIONS, describeAction } from "../../lib/strategy";
+import {
+  translateStrategy,
+  FOCUS_OPTIONS,
+  POSTURE_OPTIONS,
+  describeAction,
+} from "../../lib/strategy";
 import { getPlayerId } from "../../lib/hooks/useGamePolling";
 import NationDashboard from "./NationDashboard";
 import BuildingSlots from "./BuildingSlots";
@@ -75,9 +80,7 @@ export default function GameBoard({
         <span className="font-pixel text-[10px] text-[#4fc3f7]">
           ROUND {round}/{totalRounds}
         </span>
-        <span className="text-[#6b7280] text-xs ml-4">
-          {nation.name}
-        </span>
+        <span className="text-[#6b7280] text-xs ml-4">{nation.name}</span>
       </div>
 
       {/* Event banner */}
