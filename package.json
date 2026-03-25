@@ -8,8 +8,8 @@
     "server": "tsx src/server.ts",
     "dev": "next dev",
     "build": "npm run lint && npm run format:check && next build",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
+    "lint": "eslint app/ lib/",
+    "lint:fix": "eslint app/ lib/ --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "tsx src/test.ts"
