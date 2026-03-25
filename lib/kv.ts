@@ -1,5 +1,5 @@
-import type { RoomState, GameState } from "./game-state.js";
-import type { RoundSummary } from "../src/engine/game.js";
+import type { RoomState, GameState } from "./game-state";
+import type { RoundSummary } from "../src/engine/game";
 
 // ── In-memory store (local dev) / Vercel KV (production) ────────────────────
 //

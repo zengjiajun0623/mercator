@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createRoom } from "../../../../lib/room-manager.js";
+import { createRoom } from "@/lib/room-manager";
 
 export async function POST(request: Request) {
   try {

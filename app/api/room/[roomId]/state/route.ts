@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-import { getRoom } from "../../../../../lib/kv.js";
-import { getGameState } from "../../../../../lib/kv.js";
-import { getHistory } from "../../../../../lib/kv.js";
-import { getPlayerObservation } from "../../../../../lib/room-manager.js";
-import { computeScores } from "../../../../../lib/round-stepper.js";
+import { getRoom, getGameState, getHistory } from "@/lib/kv";
+import { getPlayerObservation } from "@/lib/room-manager";
+import { computeScores } from "@/lib/round-stepper";
 
 export async function GET(request: Request, { params }: { params: Promise<{ roomId: string }> }) {
   try {

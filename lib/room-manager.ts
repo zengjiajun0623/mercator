@@ -2,12 +2,12 @@
  * Room lifecycle management — create, join, start, resolve rounds.
  */
 import { customAlphabet } from "nanoid";
-import type { Action, GameConfig } from "../src/engine/types.js";
-import { DEFAULT_CONFIG } from "../src/engine/types.js";
-import type { RoomState, GameState, PlayerSlot, AgentType } from "./game-state.js";
-import { createNation, initialPrices, buildObservation, stepRound } from "./round-stepper.js";
-import { getRoom, setRoom, getGameState, setGameState, appendHistory } from "./kv.js";
-import { getAIActions } from "./web-agents.js";
+import type { Action, GameConfig } from "../src/engine/types";
+import { DEFAULT_CONFIG } from "../src/engine/types";
+import type { RoomState, GameState, PlayerSlot, AgentType } from "./game-state";
+import { createNation, initialPrices, buildObservation, stepRound } from "./round-stepper";
+import { getRoom, setRoom, getGameState, setGameState, appendHistory } from "./kv";
+import { getAIActions } from "./web-agents";
 
 const generateCode = customAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 6);
 

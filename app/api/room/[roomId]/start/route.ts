@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { startGame } from "../../../../../lib/room-manager.js";
+import { startGame } from "@/lib/room-manager";
 
 export async function POST(request: Request, { params }: { params: Promise<{ roomId: string }> }) {
   try {

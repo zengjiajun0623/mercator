@@ -4,8 +4,8 @@
  * Extracted from src/agent/web-agent.ts for browser-side reuse.
  * No Node.js dependencies — safe to import in React components.
  */
-import type { Action, BuildingType, Observation } from "../src/engine/types.js";
-import { GOODS, RECIPES } from "../src/engine/types.js";
+import type { Action, BuildingType, Observation } from "../src/engine/types";
+import { GOODS, RECIPES } from "../src/engine/types";
 
 export type Focus = "food" | "industry" | "trade" | "people";
 export type Posture = "free" | "protectionist" | "aggressive";

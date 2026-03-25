@@ -11,19 +11,19 @@ import type {
   Nation,
   GameConfig,
   Building,
-} from "../src/engine/types.js";
-import { GOODS, emptyStockpile } from "../src/engine/types.js";
+} from "../src/engine/types";
+import { GOODS, emptyStockpile } from "../src/engine/types";
 import {
   runProduction,
   advanceConstruction,
   buildingAssetValue,
   startBuilding,
   startUpgrade,
-} from "../src/engine/production.js";
-import { clearMarket, generateWelfareOrders, initialPrices } from "../src/engine/market.js";
-import { consumeNeeds, updatePopulation } from "../src/engine/population.js";
-import { maybeGenerateEvent } from "../src/engine/events.js";
-import type { RoundSummary, GameResult } from "../src/engine/game.js";
+} from "../src/engine/production";
+import { clearMarket, generateWelfareOrders, initialPrices } from "../src/engine/market";
+import { consumeNeeds, updatePopulation } from "../src/engine/population";
+import { maybeGenerateEvent } from "../src/engine/events";
+import type { RoundSummary, GameResult } from "../src/engine/game";
 
 // ── Nation creation (mirrors game.ts createNation) ──────────────────────────
 

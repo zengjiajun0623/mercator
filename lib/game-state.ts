@@ -1,5 +1,5 @@
-import type { Action, GameConfig, MarketPrices, Nation } from "../src/engine/types.js";
-import type { RoundSummary } from "../src/engine/game.js";
+import type { Action, GameConfig, MarketPrices, Nation } from "../src/engine/types";
+import type { RoundSummary } from "../src/engine/game";
 
 // ── Player identity ─────────────────────────────────────────────────────────
 
