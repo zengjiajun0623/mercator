@@ -1,7 +1,6 @@
 import type {
   Action,
   GameConfig,
-  Good,
   MarketPrices,
   Nation,
 } from "../src/engine/types.js";

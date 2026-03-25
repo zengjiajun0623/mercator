@@ -1,4 +1,3 @@
-import type { Action } from "../src/engine/types.js";
 import type { RoomState, GameState } from "./game-state.js";
 import type { RoundSummary } from "../src/engine/game.js";
 

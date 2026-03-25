@@ -10,8 +10,6 @@ import {
   initialPrices,
   buildObservation,
   stepRound,
-  computeScores,
-  NATION_NAMES,
 } from "./round-stepper.js";
 import { getRoom, setRoom, getGameState, setGameState, appendHistory } from "./kv.js";
 import { getAIActions } from "./web-agents.js";

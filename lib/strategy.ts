@@ -7,7 +7,6 @@
 import type {
   Action,
   BuildingType,
-  Good,
   Observation,
 } from "../src/engine/types.js";
 import { GOODS, RECIPES } from "../src/engine/types.js";
@@ -216,10 +215,18 @@ export function translateStrategy(
         : good === "textiles"
           ? textilesNeeded * resMult
           : 0;
-    if (good === "food" && types.has("mill")) reserve += 8;
-    if (good === "iron" && types.has("factory")) reserve += 5;
-    if (good === "textiles" && types.has("workshop")) reserve += 3;
-    if (good === "machinery" && types.has("workshop")) reserve += 1;
+    if (good === "food" && types.has("mill")) {
+      reserve += 8;
+    }
+    if (good === "iron" && types.has("factory")) {
+      reserve += 5;
+    }
+    if (good === "textiles" && types.has("workshop")) {
+      reserve += 3;
+    }
+    if (good === "machinery" && types.has("workshop")) {
+      reserve += 1;
+    }
     const sellable = stock - reserve;
     if (sellable > 1 && actions.length < 5) {
       actions.push({

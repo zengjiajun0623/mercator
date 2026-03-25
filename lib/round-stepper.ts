@@ -12,7 +12,7 @@ import type {
   GameConfig,
   Building,
 } from "../src/engine/types.js";
-import { GOODS, emptyStockpile, DEFAULT_CONFIG } from "../src/engine/types.js";
+import { GOODS, emptyStockpile } from "../src/engine/types.js";
 import {
   runProduction,
   advanceConstruction,
