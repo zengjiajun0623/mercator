@@ -7,7 +7,11 @@
     "start": "tsx src/index.ts",
     "server": "tsx src/server.ts",
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run lint && npm run format:check && next build",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "tsx src/test.ts"
   },
   "keywords": [],
@@ -33,6 +37,10 @@
     "@types/node": "^22.15.17",
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
+    "eslint": "^9.39.4",
+    "eslint-config-next": "^16.2.1",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
     "tailwindcss": "^4.1.7"
   }
 }
