@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "Node16",
-    "moduleResolution": "Node16",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "strict": true,
     "esModuleInterop": true,
     "outDir": "dist",
@@ -14,11 +14,12 @@
     "skipLibCheck": true,
     "noEmit": true,
     "incremental": true,
+    "isolatedModules": true,
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./*"]
     }
   },
-  "include": ["src", "app", "lib", "next-env.d.ts", ".next/types/**/*.ts"],
+  "include": ["src", "app", "lib", "next-env.d.ts", "global.d.ts", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }
