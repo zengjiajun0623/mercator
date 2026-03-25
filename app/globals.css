@@ -1,1 +1,122 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;600;700&display=swap");
+
+:root {
+  --bg-deep: #0a0e17;
+  --bg-panel: #111827;
+  --bg-card: #1a2233;
+  --border: #2a3444;
+  --border-glow: #4fc3f7;
+  --text-primary: #e0e0e0;
+  --text-dim: #6b7280;
+  --gold: #ffd54f;
+  --green: #66bb6a;
+  --blue: #4fc3f7;
+  --red: #ef5350;
+  --purple: #ab47bc;
+  --orange: #ff7043;
+  --cyan: #26c6da;
+}
+
+/* Pixel heading font */
+.font-pixel {
+  font-family: "Press Start 2P", monospace;
+}
+
+/* Terminal body font */
+.font-mono {
+  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+}
+
+/* Terminal-style panel */
+.panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.panel-header {
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Scanline overlay for extra terminal feel */
+.scanline::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Pixel-style bar */
+.pixel-bar {
+  height: 12px;
+  image-rendering: pixelated;
+  border-radius: 0;
+}
+
+/* Glow effect for interactive elements */
+.glow-hover:hover {
+  box-shadow: 0 0 8px rgba(79, 195, 247, 0.3);
+  border-color: var(--border-glow);
+}
+
+/* Blinking cursor */
+.blink {
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Dots loading animation */
+.dots::after {
+  content: "";
+  animation: dots 1.5s steps(4, end) infinite;
+}
+@keyframes dots {
+  0% {
+    content: "";
+  }
+  25% {
+    content: ".";
+  }
+  50% {
+    content: "..";
+  }
+  75% {
+    content: "...";
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
