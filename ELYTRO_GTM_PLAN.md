@@ -62,25 +62,166 @@ Elytro is an ERC-4337 smart contract wallet with social recovery, passkey auth, 
 
 ---
 
-## 3. Target Segments (Priority Order)
+## 3. Target Developer Segments — Deep Analysis
 
-### Segment 1: AI Agent Framework Developers (Primary)
+### The Critical Insight: Two Worlds Colliding
 
-**Who:** Teams building on LangChain, CrewAI, ElizaOS, AutoGPT, Anthropic Agent SDK, OpenAI Agents SDK
-**Pain:** Need to give agents wallets without handing over raw private keys or depending on Coinbase
-**Channel:** GitHub, developer docs, framework integrations, Twitter/X
+The agent wallet market sits at the collision of two developer populations that **don't naturally overlap**:
 
-### Segment 2: DeFi Protocol Teams Adding Agent Support
+- **AI/ML developers** — fluent in Python, LangChain, prompt engineering. Most have a negative view of crypto. As Circle co-founder Sean Neville noted: "The AI developer community in particular has a negative view of crypto, because of things like memecoins and Ponzi schemes." OpenClaw creator Peter Steinberger publicly refuses to even discuss crypto.
+- **Web3/Solidity developers** — fluent in smart contracts, DeFi, on-chain composability. Most lack experience with LLM orchestration, agent frameworks, and reinforcement learning.
 
-**Who:** Protocols adding automated strategies, keeper bots, or agent-powered UX
-**Pain:** Need programmable wallet infra with spending limits and recovery
-**Channel:** Ethereum ecosystem events, governance forums, direct outreach
+**Elytro's GTM must bridge this gap.** The winner will be whoever makes crypto wallets feel like a normal API to AI developers, and whoever makes agent orchestration feel natural to Web3 developers. Here are the specific segments, ranked by priority:
 
-### Segment 3: Indie Agent Builders / Hackers
+---
 
-**Who:** Solo devs and small teams shipping agent products, hackathon participants
-**Pain:** Want the fastest path to "my agent can pay for things on-chain"
-**Channel:** Hackathons, Twitter/X, YouTube tutorials, Discord
+### Segment 1: AI-First Agent Developers (PRIMARY — highest leverage)
+
+**Who they are:**
+- Python/TypeScript developers building on LangChain, LangGraph, CrewAI, AutoGPT, ElizaOS, Anthropic Agent SDK, OpenAI Agents SDK
+- Typically work at AI startups, build SaaS products with agent features, or are independent builders shipping agent tools
+- 57% of organizations now have AI agents in production (McKinsey 2026) — these teams need financial capabilities
+
+**Their technical profile:**
+- Strong in: Python, TypeScript, API integrations, LLM orchestration, prompt engineering
+- Weak in: Solidity, gas mechanics, key management, on-chain composability
+- Tools: VS Code, GitHub, pip/npm, Docker, cloud providers
+- Frameworks: LangChain (dominant), CrewAI (growing), ElizaOS (Web3-native niche)
+
+**Their core pain points:**
+1. **"The money problem is unsolved."** Every framework gives you tool calling, memory, and planning — none solve payments properly. Workarounds all have tradeoffs: MPC wallets mean your agent holds funds; multisig kills autonomy; custodial APIs mean trusting a third party.
+2. **Crypto is alien territory.** They don't want to learn Solidity, understand gas, or manage private keys. They want `agent.pay(recipient, amount)` and for it to just work.
+3. **Security anxiety.** Giving an LLM access to real money is terrifying. They need guardrails (spending limits, whitelists, session expiry) that are enforced at the infrastructure level, not just in code.
+4. **Vendor lock-in fear.** Coinbase Agentic Wallets are easy to set up but create deep dependency. If Coinbase changes pricing, revokes API keys, or adds restrictions, your agent goes offline.
+
+**What they actually want from Elytro:**
+- A 3-line SDK integration: `createWallet()`, `setLimits()`, `pay()`
+- Zero crypto jargon in the docs — explain in terms of "permissions", "budgets", "sessions", not "ERC-4337", "UserOps", "bundlers"
+- Python SDK (not just TypeScript) — this audience lives in Python
+- LangChain/CrewAI tool that "just works" as a plugin
+- Stablecoin-first (USDC/USDT) — they don't care about ETH, they want dollar-denominated payments
+
+**Why they're the primary target:**
+- Largest addressable population — millions of developers building AI apps vs. ~308 active wallet infra devs in crypto
+- Lowest current penetration — most haven't integrated any wallet yet
+- Highest viral coefficient — framework integrations create multiplier distribution (one LangChain PR = thousands of developers see Elytro)
+
+**How to reach them:**
+- LangChain/CrewAI plugin submissions (show up in their ecosystem docs)
+- MCP server (Claude, Cursor, and other MCP-compatible tools)
+- dev.to / Medium technical tutorials written in AI-developer language
+- Python-first SDK on PyPI
+- YouTube tutorials: "Give your LangChain agent a wallet in 5 minutes"
+
+---
+
+### Segment 2: Web3-Native Agent Builders (SECONDARY — fast adopters)
+
+**Who they are:**
+- Solidity/Rust developers at DeFi protocols adding autonomous features
+- 68% of new DeFi protocols in Q1 2026 shipped with at least one AI agent
+- Teams at protocols like Uniswap, PancakeSwap, Aave, and smaller DeFi projects
+- 41% of crypto hedge funds are testing on-chain AI agents for portfolio management
+
+**Their technical profile:**
+- Strong in: Solidity, Hardhat/Foundry, on-chain composability, MEV, gas optimization
+- Weak in: LLM orchestration, agent framework design, prompt engineering
+- Tools: Foundry, Hardhat, Etherscan, Tenderly, The Graph
+- They understand ERC-4337, session keys, and smart accounts natively
+
+**Their core pain points:**
+1. **Bots → agents is a paradigm shift.** Traditional DeFi bots follow fixed rules. AI agents evaluate multiple signals (liquidity depth, collateral health, funding rates, cross-chain conditions) and adapt dynamically. The wallet layer needs to support this flexibility.
+2. **Agent security is existential.** Oracle manipulation, "fat finger" amplification (agent loops a trade 100x instead of 10x), and systemic correlated failures are real risks. They need hardware-enforced guardrails, not just code-level checks.
+3. **Multi-agent coordination.** DeFi strategies increasingly involve agent teams — one agent monitors, another executes, a third manages risk. They need shared treasuries with scoped permissions per agent.
+4. **Identity and reputation.** With ERC-8004 live, they want agents with verifiable track records. An agent managing a vault should have an on-chain reputation that LPs can audit.
+
+**What they actually want from Elytro:**
+- ERC-4337 smart accounts with fine-grained permission modules
+- Session keys scoped to specific contracts/functions with time + value limits
+- Multi-agent treasury management (shared wallet, individual permissions)
+- ERC-8004 integration for agent identity + reputation
+- Solidity-level composability — they want to extend modules, not just call an SDK
+
+**Why they're secondary (not primary):**
+- Smaller population (~308 active wallet infra devs, though broader DeFi dev community is larger)
+- Already have workarounds (raw EOAs, custom multisigs, MPC)
+- Harder to convert — they'll evaluate deeply before switching
+- But: they're fast adopters once convinced, and they build high-visibility projects
+
+**How to reach them:**
+- Ethereum Magicians forum posts, EIP discussions
+- Foundry/Hardhat integration guides
+- ETHGlobal hackathon bounties
+- Direct outreach to protocol teams adding agent features
+- Security-focused content: "How ERC-4337 session keys prevent agent fat-finger disasters"
+
+---
+
+### Segment 3: Indie Hackers & Hackathon Builders (TERTIARY — community seeding)
+
+**Who they are:**
+- Solo developers and 2-3 person teams building agent products
+- Hackathon participants (ETHGlobal, AI hackathons, framework-specific events)
+- Crypto Twitter builders shipping experiments publicly
+- Students and early-career devs exploring the AI x crypto intersection
+
+**Their technical profile:**
+- Generalist — some Python, some TypeScript, some Solidity basics
+- Fast prototypers, not deep infrastructure builders
+- Use whatever has the best "getting started" docs and Discord support
+
+**Their core pain points:**
+1. **Speed to demo.** They have 48 hours at a hackathon. They need "wallet works in 5 minutes" or they'll use Coinbase.
+2. **Cost.** Gas fees on mainnet are prohibitive for experiments. They need testnet support and gas sponsorship.
+3. **Templates, not docs.** They want a fork-and-deploy template repo, not a 30-page integration guide.
+
+**What they actually want from Elytro:**
+- One-click deploy template repos on GitHub
+- Testnet faucet / gas sponsorship for hackathons
+- 5-minute quickstart guide
+- Active Discord with fast response times
+- Bounty programs ($2-5K for "best agent app using Elytro")
+
+**Why they're tertiary:**
+- Low individual revenue potential
+- High churn — many projects are one-off experiments
+- But: they create content, build social proof, find bugs, and some become Segment 1 or 2 developers later
+- They're your grassroots evangelists
+
+**How to reach them:**
+- Hackathon sponsorships + bounties
+- Twitter/X build-in-public threads
+- YouTube / TikTok short-form tutorials
+- Discord community with responsive support
+- GitHub template gallery
+
+---
+
+### Segment 4: Fintech / TradFi Teams Exploring Agent Commerce (FUTURE — not yet)
+
+**Who they are:**
+- Traditional fintech companies, payment processors, and banks exploring AI agent commerce
+- Visa (launched Visa CLI for agent payments), Stripe (co-authored Machine Payments Protocol), PayPal
+- They're watching the space but moving slowly due to compliance requirements
+
+**Why NOT to target them now:**
+- They will choose Coinbase, Stripe, or Visa for compliance and trust reasons
+- Elytro has no compliance story yet (no MSB license, no KYC/AML framework)
+- They'll be relevant in 12-18 months if Elytro builds developer traction first
+- Keep them aware (PR, conference talks) but don't spend sales effort here
+
+---
+
+### Summary: Developer Persona Priority Matrix
+
+| Segment | Size | Urgency | Fit with Elytro | Conversion Effort | Priority |
+|---|---|---|---|---|---|
+| AI-first agent devs | Very large | High (building now) | Strong (need open wallet) | Medium (crypto-averse) | **#1** |
+| Web3-native agent builders | Medium | High (68% adding agents) | Very strong (speak same language) | Low (already understand AA) | **#2** |
+| Indie hackers / hackathon | Large | Medium | Good (need speed + free) | Low | **#3** |
+| Fintech / TradFi | Large | Low (exploring) | Weak (need compliance) | Very high | **Not now** |
+
+**The key strategic choice:** Segment 1 (AI-first developers) is the primary target because they represent the largest untapped market and the highest growth potential. But you must **speak their language** — Python SDKs, stablecoin-first, zero crypto jargon, LangChain integrations. If you market Elytro using ERC-4337 and Account Abstraction terminology, you'll only reach Segment 2.
 
 ---
 
